@@ -209,7 +209,8 @@ Route::middleware('auth')->group(function () {
 ```
 
 #### 5. Create View
-Create `resources/views/product.blade.php`:
+Create `resources/views/product.blade.php`
+
 CRUD page example: examples/students.blade.php.example
 
 #### 6. Add to Sidebar
