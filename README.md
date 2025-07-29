@@ -317,9 +317,9 @@ php artisan make:model ModelName -mcs
 ## 🎨 Theme Integration
 
 This project uses the Metronic theme. Assets are located in:
-- CSS: `public/metronic/css/`
-- JS: `public/metronic/js/`
-- Images: `public/metronic/media/`
+- CSS: `public/assets/css/`
+- JS: `public/assets/js/`
+- Images: `public/assets/media/`
 
 ## 🔐 Authentication
 
