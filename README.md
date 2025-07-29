@@ -1,61 +1,328 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+### Installation Steps
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/mohamed-benoba/itse408-project-template.git
+   cd itse408-project-template
+   ```
 
-## About Laravel
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+5. **Create MySQL DB**
 
-## Learning Laravel
+   ```bash
+   # Create a new MySQL database
+   mysql -u root -h 127.0.0.1 -P 3306 -e "CREATE DATABASE your_database_name;"
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+5. **Configure database**
+   Edit `.env` file and set your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database_name
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+6. **Run migrations**
+   ```bash
+   php artisan migrate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+7. **Seed the database (optional)**
+   ```bash
+   php artisan db:seed
+   ```
 
-## Laravel Sponsors
+8. **Build assets**
+   ```bash
+   npm run build
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+9. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
 
-### Premium Partners
+10. **Access the application**
+    - Open: `http://localhost:8000`
+    - Default login: Check the seeder for credentials
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ CRUD Operations Guide
 
-## Contributing
+### Step-by-Step CRUD Creation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Here's how to create a complete CRUD operation for any entity (e.g., "Product"):
 
-## Code of Conduct
+#### 1. Create Migration
+```bash
+php artisan make:migration create_products_table
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Edit the migration file:
+```php
+public function up()
+{
+    Schema::create('products', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->text('description')->nullable();
+        $table->decimal('price', 8, 2);
+        $table->integer('stock')->default(0);
+        $table->boolean('is_active')->default(true);
+        $table->timestamps();
+    });
+}
+```
 
-## Security Vulnerabilities
+#### 2. Create Model
+```bash
+php artisan make:model Product
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Edit the model:
+```php
+<?php
 
-## License
+namespace App\Models;
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'stock',
+        'is_active'
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'is_active' => 'boolean',
+    ];
+}
+```
+
+#### 3. Create Controller
+```bash
+php artisan make:controller ProductController --resource
+```
+
+Edit the controller:
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    public function index()
+    {
+        $products = Product::latest()->paginate(10);
+        return view('products.index', compact('products'));
+    }
+
+    public function create()
+    {
+        return view('products.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'is_active' => 'boolean'
+        ]);
+
+        Product::create($validated);
+
+        return redirect()->route('products.index')
+            ->with('success', 'Product created successfully.');
+    }
+
+    public function show(Product $product)
+    {
+        return view('products.show', compact('product'));
+    }
+
+    public function edit(Product $product)
+    {
+        return view('products.edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'is_active' => 'boolean'
+        ]);
+
+        $product->update($validated);
+
+        return redirect()->route('products.index')
+            ->with('success', 'Product updated successfully.');
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return redirect()->route('products.index')
+            ->with('success', 'Product deleted successfully.');
+    }
+}
+```
+
+#### 4. Create Routes
+Add to `routes/web.php`:
+```php
+Route::middleware('auth')->group(function () {
+    Route::resource('products', ProductController::class);
+});
+```
+
+#### 5. Create View
+Create `resources/views/product.blade.php`:
+CRUD page example: examples/students.blade.php.example
+
+#### 6. Add to Sidebar
+Add to `resources/views/layout/sidebar.blade.php`:
+```blade
+{{-- Products --}}
+<div class="kt-menu-item">
+    <a class="kt-menu-link gap-2.5 py-2 px-2.5 rounded-md border border-transparent kt-menu-item-active:border-border kt-menu-item-active:bg-background kt-menu-link-hover:bg-background kt-menu-link-hover:border-border" href="{{ route('products.index') }}">
+        <span class="kt-menu-icon items-start text-lg text-secondary-foreground kt-menu-item-active:text-foreground kt-menu-item-here:text-foreground kt-menu-item-show:text-foreground kt-menu-link-hover:text-foreground dark:menu-item-active:text-mono dark:menu-item-here:text-mono dark:menu-item-show:text-mono dark:menu-link-hover:text-mono">
+            <i class="fa-solid fa-box"></i>
+        </span>
+        <span class="kt-menu-title text-sm text-foreground font-medium kt-menu-item-here:text-mono kt-menu-item-show:text-mono kt-menu-link-hover:text-mono">
+            Products
+        </span>
+    </a>
+</div>
+```
+
+#### 7. Run Migration
+```bash
+php artisan migrate
+```
+
+## 🔧 Useful Commands
+
+### Development
+```bash
+# Start development server
+php artisan serve
+
+# Watch for changes and rebuild assets
+npm run dev
+
+# Build for production
+npm run build
+
+# Clear all caches
+php artisan optimize:clear
+```
+
+### Database
+```bash
+# Create migration
+php artisan make:migration create_table_name
+
+# Run migrations
+php artisan migrate
+
+# Rollback last migration
+php artisan migrate:rollback
+
+# Reset all migrations
+php artisan migrate:reset
+
+# Refresh migrations and seed
+php artisan migrate:fresh --seed
+```
+
+### Models & Controllers
+```bash
+# Create model with migration
+php artisan make:model ModelName -m
+
+# Create controller
+php artisan make:controller ControllerName
+
+# Create resource controller
+php artisan make:controller ControllerName --resource
+
+# Create model with controller and migration
+php artisan make:model ModelName -mc
+
+# Create model with controller, migration, and seeder
+php artisan make:model ModelName -mcs
+```
+
+## 📁 Project Structure
+
+```
+├── app/
+│   ├── Http/Controllers/    # Controllers
+│   ├── Models/             # Eloquent models
+│   └── Providers/          # Service providers
+├── database/
+│   ├── migrations/         # Database migrations
+│   ├── seeders/           # Database seeders
+│   └── factories/         # Model factories
+├── resources/
+│   ├── views/             # Blade templates
+│   │   ├── layout/        # Layout files
+│   │   └── auth/          # Authentication views
+│   ├── css/              # Stylesheets
+│   └── js/               # JavaScript files
+├── routes/
+│   └── web.php           # Web routes
+└── public/               # Public assets
+```
+
+## 🎨 Theme Integration
+
+This project uses the Metronic theme. Assets are located in:
+- CSS: `public/metronic/css/`
+- JS: `public/metronic/js/`
+- Images: `public/metronic/media/`
+
+## 🔐 Authentication
+
+The application includes a complete authentication system:
+- Login/Signup pages
+- Password reset functionality
+- User profile management
+- Session management
+
+## 📝 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
