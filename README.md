@@ -2,13 +2,13 @@
 
 1. **Clone the repository**
    
-   Only one person clone this project:
+   A selected team member clone this template:
    ```bash
    git clone https://github.com/mohamed-benoba/itse408-project-template.git
    cd itse408-project-template
    ```
 
-   Upload the folders and files to the exam repo, then other team members get to clone it from there:
+   The selected team member upload the folders and files to the exam repo, then other team members get to clone it from there:
    ```bash
    git clone <exam-repo>
    cd exam-project
