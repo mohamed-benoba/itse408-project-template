@@ -2,8 +2,13 @@
 
 1. **Clone the repository**
    ```bash
+   Only one person clone this project:
    git clone https://github.com/mohamed-benoba/itse408-project-template.git
    cd itse408-project-template
+
+   Upload the folders and files to the exam repo, then other team members get to clone it from there:
+   git clone <exam-repo>
+   cd exam-project
    ```
 
 2. **Install PHP dependencies**
@@ -86,7 +91,7 @@ public function up()
         $table->decimal('price', 8, 2);
         $table->integer('stock')->default(0);
         $table->boolean('is_active')->default(true);
-        $table->timestamps();
+        $table->timestamps(); # created_at and updated_at
     });
 }
 ```
