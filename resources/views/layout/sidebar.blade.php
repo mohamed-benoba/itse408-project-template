@@ -14,7 +14,7 @@
                     data-kt-menu-item-trigger="hover">
                     <div class="kt-menu-label cursor-pointer text-mono font-medium grow justify-between">
                         <span class="text-base font-medium text-mono grow justify-center">
-                            مدرستي
+                            مشروع
                         </span>
                         <span class="kt-menu-arrow">
                             <i class="ki-filled ki-down">

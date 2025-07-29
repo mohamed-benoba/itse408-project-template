@@ -328,7 +328,3 @@ The application includes a complete authentication system:
 - Password reset functionality
 - User profile management
 - Session management
-
-## 📝 License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
